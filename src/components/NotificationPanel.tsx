@@ -7,7 +7,7 @@ import InIcon from "./InIcon";
 
 const NotificationPanel: React.FC = () => {
   return (
-    <div className="w-[400px] H-[116] bg-white border rounded-xl shadow-lg p-3 absolute bottom-80 right-[-30rem]">
+    <div className="w-[400px] h-[116px] bg-white border rounded-xl shadow-lg p-3 absolute bottom-80 right-1 transition-all duration-1000 ease-in-out">
       <div className="flex items-center justify-between border-b pb-3">
         <div className="flex items-center gap-3">
           <div className="bg-gray-200 p-2 rounded-full">

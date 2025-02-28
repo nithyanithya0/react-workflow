@@ -1,6 +1,7 @@
 import React, { useState } from "react"; 
-import { FaRegBell, FaPlus, FaBell, FaWhatsapp } from "react-icons/fa"; 
+import { FaRegBell, FaPlus, FaBell, FaWhatsapp, FaTrash, FaEdit } from "react-icons/fa"; 
 import { MdClose, MdNotificationsActive } from "react-icons/md"; 
+import AddAnotherButton from "./AddAnotherButton"; // Import AddAnotherButton
 
 // 📌 Custom Icon Component
 const CustomIcon = () => (
@@ -118,6 +119,20 @@ const WorkflowEditor: React.FC = () => {
   const [showAnotherNotifications, setShowAnotherNotifications] = useState(false);
   const [showMoreNotifications, setShowMoreNotifications] = useState(false);
   const [showExtraNotifications, setShowExtraNotifications] = useState(false);
+  const [boxes, setBoxes] = useState<{ id: number; content: string; details: string }[]>([]); // State to manage boxes
+
+  const addBox = () => {
+    setBoxes([...boxes, { id: boxes.length + 1, content: `New Box ${boxes.length + 1}`, details: "Node Information" }]);
+  };
+
+  const deleteBox = (index: number) => {
+    setBoxes(boxes.filter((_, i) => i !== index));
+  };
+
+  const editBox = (index: number, newContent: string, newDetails: string) => {
+    const updatedBoxes = boxes.map((box, i) => (i === index ? { ...box, content: newContent, details: newDetails } : box));
+    setBoxes(updatedBoxes);
+  };
 
   return (
     <div className="flex flex-col items-center justify-start min-h-screen p-6 relative font-mulish">
@@ -239,6 +254,8 @@ const WorkflowEditor: React.FC = () => {
         </div>
       )}
 
+ 
+
       {/* Add another box similar to the Main Node (White Box) and place it outside under the existing one */}
       {showNode && (
         <div className="mt-10 p-5 bg-white border rounded-xl shadow-lg w-[500px] relative z-0 rounded-tl-none">
@@ -254,14 +271,14 @@ const WorkflowEditor: React.FC = () => {
           </div>
 
           {/* 📑 Information Sections */}
-          <div className="mt-3 space-y-3">
+          <div class="mt-3 space-y-3">
             {/* 🔵 First Information Block */}
-            <div className="flex justify-between items-center p-3 bg-blue-50 rounded-lg border">
-              <div className="flex items-center gap-2">
+            <div class="flex justify-between items-center p-3 bg-blue-50 rounded-lg border">
+              <div class="flex items-center gap-2">
                 <CompanyIcon /> {/* ✅ Updated Icon for "Company Information" */}
-                <span className="text-black-100 font-small">Additional Information</span>
+                <span class="text-black-100 font-small">Additional Information</span>
               </div>
-              <button className="px-3 py-0.5 border rounded-lg text-black-400 border-[#BEDBFF] flex items-center gap-2">
+              <button class="px-3 py-0.5 border rounded-lg text-black-400 border-[#BEDBFF] flex items-center gap-2">
                 <InIcon /> {/* ✅ In Icon moved to the left side */}
                 More Details
               </button>
@@ -269,7 +286,7 @@ const WorkflowEditor: React.FC = () => {
           </div>
 
           {/* Add SixDotIcon to the left side of the new box */}
-          <div className="absolute left-[-2.7rem] top-[1.4rem] transform -translate-y-1/2">
+          <div class="absolute left-[-2.7rem] top-[1.4rem] transform -translate-y-1/2">
             <SixDotIcon />
           </div>
 
@@ -602,6 +619,163 @@ const WorkflowEditor: React.FC = () => {
           )}
         </div>
       )}
+
+      {/* Add Node Box */}
+      {showNode && (
+        <div className="mt-10 p-5 bg-white border rounded-xl shadow-lg w-[500px] relative z-0 rounded-tl-none">
+          {/* 🔹 Header Section */}
+          <div className="flex items-center justify-between border-b pb-3">
+            <div className="flex items-center gap-2">
+              <div className="bg-gray-200 p-2 rounded-full">
+                <CustomIcon />
+              </div>
+              <h3 className="text-lg font-semibold">Add Node</h3>
+            </div>
+            <UpdatedBookIcon />
+          </div>
+
+          {/* 📑 Information Sections */}
+          <div className="mt-3 space-y-3">
+            {/* 🔵 First Information Block */}
+            <div className="flex justify-between items-center p-3 bg-blue-50 rounded-lg border">
+              <div className="flex items-center gap-2">
+                <CompanyIcon />
+                <span className="text-black-100 font-small">Node Information</span>
+              </div>
+              <button className="px-3 py-0.5 border rounded-lg text-black-400 border-[#BEDBFF] flex items-center gap-2">
+                <InIcon />
+                Add Details
+              </button>
+            </div>
+          </div>
+
+          {/* Add SixDotIcon to the left side of the new box */}
+          <div className="absolute left-[-2.7rem] top-[1.4rem] transform -translate-y-1/2">
+            <SixDotIcon />
+          </div>
+
+          {/* 🔔 Notification Button */}
+          <button
+            onClick={() => setShowNotifications(!showNotifications)}
+            className={`absolute right-[-3.3rem] top-1/2 transform -translate-y-1/2 ${
+              showNotifications ? "bg-[#00BC7D]" : "bg-gray-400"
+            } text-white px-4 py-3 rounded-l-lg rounded-r-full shadow-lg flex items-center justify-center z-[-1]`}
+          >
+            <FaRegBell className="text-xl" />
+            <div className={`absolute top-2.5 right-2 ${
+              showNotifications ? "bg-[#00BC7D]" : "bg-gray-400"
+            } text-white p-1 rounded-full w-4 h-4 flex items-center justify-center`}>
+              <FaPlus className="text-[8px]" />
+            </div>
+          </button>
+
+          {/* 📍 Horizontal Dotted Line Animation */}
+          {showNotifications && (
+            <div
+              className="absolute top-1/2 right-[-6.3rem] transform translate-y-[-50%] border-t-4 border-purple-600 border-dashed transition-all duration-1000 ease-in-out"
+              style={{ width: showNotifications ? "3rem" : "0" }}
+            ></div>
+          )}
+
+          {/* 📌 Notification Panel */}
+          {showNotifications && (
+            <div
+              className="w-[400px] H-[116] bg-white border rounded-xl shadow-lg p-3 absolute bottom-80 right-[-30rem] transition-all duration-1000 ease-in-out"
+              style={{ right: showNotifications ? "1rem" : "-30rem" }}
+            >
+              {/* 🔹 Header */}
+              <div className="flex items-center justify-between border-b pb-3">
+                <div className="flex items-center gap-3">
+                  <div className="bg-gray-200 p-2 rounded-full">
+                    <CustomIcon className="text-gray-600 text-xl" />
+                  </div>
+                  <h3 className="text-lg font-semibold text-gray-800">Reminder Message</h3>
+                </div>
+                <button className="p-2 rounded-lg ">
+                  <UpdatedBookIcon className="text-gray-500 text-xl" />
+                </button>
+              </div>
+              {/* 📑 WhatsApp Reminder */}
+              <div className="mt-3 p-3 bg-green-50 border border-green-300 rounded-lg flex justify-between items-center">
+                <div className="flex items-center gap-2">
+                  <FaWhatsapp className="text-green-600 text-xl" />
+                  <span className="text-black font-medium">WhatsApp</span>
+                </div>
+                <button className="px-3 py-1 border border-green-300 rounded-lg flex items-center gap-2 text-black-600 bg-white ">
+                  <InIcon className="text-black-600" />
+                  Remind
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+      
+      {/* Render additional boxes */}
+      {boxes.map((box, index) => (
+        <div key={index} className="mt-10 p-5 bg-white border rounded-xl shadow-lg w-[500px] relative z-0 rounded-tl-none">
+          {/* 🔹 Header Section */}
+          <div className="flex items-center justify-between border-b pb-3">
+            <div className="flex items-center gap-2">
+              <div className="bg-gray-200 p-2 rounded-full">
+                <CustomIcon />
+              </div>
+              <h3 className="text-lg font-semibold">{box.content}</h3>
+            </div>
+            <UpdatedBookIcon />
+          </div>
+
+          {/* 📑 Information Sections */}
+          <div className="mt-3 space-y-3">
+            {/* 🔵 First Information Block */}
+            <div className="flex justify-between items-center p-3 bg-blue-50 rounded-lg border">
+              <div className="flex items-center gap-2">
+                <CompanyIcon />
+                <span className="text-black-100 font-small">Node Information</span>
+              </div>
+              <button className="px-3 py-0.5 border rounded-lg text-black-400 border-[#BEDBFF] flex items-center gap-2">
+                <InIcon />
+                Add Details
+              </button>
+            </div>
+          </div>
+
+          {/* Add SixDotIcon to the left side of the new box */}
+          <div className="absolute left-[-2.7rem] top-[1.4rem] transform -translate-y-1/2">
+            <SixDotIcon />
+          </div>
+
+          {/* Edit Box Button */}
+          <button
+            onClick={() => {
+              const newContent = prompt("Edit box content:", box.content);
+              if (newContent) {
+                editBox(index, newContent);
+              }
+            }}
+            className="absolute top-2 right-10 bg-blue-500 text-white p-2 rounded-full"
+          >
+            <FaEdit className="text-lg" />
+          </button>
+
+          {/* Delete Box Button */}
+          <button
+            onClick={() => deleteBox(index)}
+            className="absolute top-2 right-2 bg-red-500 text-white p-2 rounded-full"
+          >
+            <FaTrash className="text-lg" />
+          </button>
+        </div>
+      ))}
+
+      {/* Add Another Button */}
+      <button
+        onClick={addBox}
+        className="mt-10 bg-blue-600 text-white px-6 py-3 rounded-lg text-lg font-semibold flex items-center gap-2"
+      >
+        <FaPlus className="text-xl" />
+        Add Another
+      </button>
     </div>
   );
 };
@@ -638,4 +812,3 @@ const NotificationPanel: React.FC = () => {
 };
 
 export default WorkflowEditor;
-
